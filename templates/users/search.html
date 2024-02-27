@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <main class="container m-5">
+    <h1 class="main-title m-3">Search Recipe</h1>
+    
+    <form id="search-form" class="m-3">
+      <h2>What are we thinking of cooking today?</h2>
+      <div class="row">
+        <div class="col-sm-10">
+          <input id="query" name="query" type="text" placeholder="Recipe name">
+        </div>
+        <div class="col-sm-10">
+          <button id="search-btn" class="btn btn-primary mt-3 ml-3" type="submit">Search</button>
+          <button id="random-btn" class="btn btn-secondary mt-3 ml-3" type="button">Get Random Recipes</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- Show recipes here -->
+
+  <div id="recipes-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mx-3"></div>
+  <div class="btn-container">
+    <button id="view-more-btn" class="btn btn-primary m-3" style="display: none;">View More</button>
+  </div>
+
+
+{% endblock %}

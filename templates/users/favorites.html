@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="m-5">
+  <h1 class="main-title m-3">Favorites</h1>
+  <a href="/users/{{user.username}}" class="btn btn-secondary m-3">Return to Search</a>
+</main>
+  
+  <div id="favorites-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mx-3">
+    {% for recipe in user.favorites %}
+    <div class="recipe-container col" data-id="{{recipe.id}}">
+      <div class="recipe-card card h-100">
+        <img class="recipe-img card-img-top" src="{{recipe.recipe_img}}" alt="{{recipe.recipe_title}}">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="/getRecipe/{{recipe.recipe_id}}">{{recipe.recipe_title}}</a>
+          </h5>
+        </div>
+        <button class="remove-btn btn btn-danger">Remove</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+
+
+  
+{% endblock %}
