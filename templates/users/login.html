@@ -2,30 +2,31 @@
 
 {% block content %}
 
-<h1>Welcome to Recipe App</h1>
+<main class="container m-5"></main>
+  <h1 class="main-title m-3">Welcome to GoTo Recipe!</h1>
 
-<p>Hello! So glad you could join our table today!</p>
-<p>Please Login or Register using the link below!</p>
+  <p>Please Login or Register</p>
 
-<form method="POST" id="login_form">
+  <form method="POST" id="login_form" class="m-3">
 
-  {{form.hidden_tag()}}
+    {{form.hidden_tag()}}
 
-  {% for field in form if field.widget.input_type != "hidden" %}
-  {% for error in field.errors %}
-  <span class="text-danger">{{ error }}</span>
-  {% endfor %}
-  <div class="form-group row">
-    {{ field.label(class="col-sm-2 col-form-label")}}
-    <div class="col-sm-10">
-      {{ field(class="form-control")}}
+    {% for field in form if field.widget.input_type != "hidden" %}
+    {% for error in field.errors %}
+    <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+    <div class="form-group row">
+      {{ field.label(class="col-sm-2 col-form-label")}}
+      <div class="col-sm-10">
+        {{ field(class="form-control")}}
+      </div>
     </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
 
-  <button class="btn btn-primary">Login</button>
-  <a href="/register" class="btn btn-secondary">To Register</a>
+    <button class="btn btn-primary">Login</button>
+    <a href="/register" class="btn btn-secondary">To Register</a>
 
-</form>
+  </form>
+</main>
 
 {% endblock %}
