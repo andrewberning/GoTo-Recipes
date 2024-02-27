@@ -13,7 +13,7 @@ API_BASE_URL = "https://api.spoonacular.com/recipes"
 app = Flask(__name__)
 
 app.testing = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///recipe'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gpnvljuv:3ySoRqoqhwfeZrShEUSHlGSs1llSO7NC@bubble.db.elephantsql.com/gpnvljuv'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
