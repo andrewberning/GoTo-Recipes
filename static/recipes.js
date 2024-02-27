@@ -75,7 +75,6 @@ $("#search-form").on("submit", function(evt) {
   const query = $('#query').val();
   
   pageNumber = 1
-  console.log(`You submitted the form to get ${query} recipes and the page # is ${pageNumber}`)
 
   getRecipes(query, pageNumber);
 
@@ -94,7 +93,6 @@ $("#random-btn").on("click", function() {
 $("#view-more-btn").on("click", function() {
   let query = $('#query').val();
   pageNumber+=1;
-  console.log(`pageNumber is now ${pageNumber}`)
 
   getRecipes(query, pageNumber);
   
@@ -106,7 +104,6 @@ favoritesList.on("click", ".remove-btn", async function (evt) {
   evt.preventDefault();
   let recipeContainer = $(this).closest('.recipe-container');
   let recipeId = recipeContainer.data("id");
-  console.log(recipeId);
 
   await axios.delete(`/users/favorites/${recipeId}`);
   recipeContainer.remove();
@@ -117,7 +114,6 @@ singleRecipe.on("click", ".remove-btn", async function (evt) {
   evt.preventDefault();
   let recipeContainer = $(this).closest('.container');
   let recipeId = recipeContainer.data("id");
-  console.log(recipeId);
 
   await axios.delete(`/users/favorites/${recipeId}`)
 
