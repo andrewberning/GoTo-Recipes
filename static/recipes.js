@@ -44,7 +44,7 @@ function generateRecipeHTML(recipe) {
 
 /** get recipe function */
 async function getRecipes(query, page) {
-  const response = await axios.get("/recipes/${query}/${page}")
+  const response = await axios.get(`/recipes/${query}/${page}`)
   
   for (let recipeData of response.data) {
     let recipe = $(generateRecipeHTML(recipeData));
