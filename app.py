@@ -114,7 +114,6 @@ def search(username):
         raise Unauthorized()
     
     user = User.query.filter_by(username=username).first()
-    print(user)
       
     return render_template("users/search.html", user=user)
 
@@ -132,8 +131,6 @@ def deleteFavoriteRecipe(id):
     """Delete recipe from database."""
   
     favRecipe = Favorite.query.get_or_404(id)
-    
-    print(favRecipe)
     
     db.session.delete(favRecipe)
     db.session.commit()
@@ -163,8 +160,6 @@ def add_to_favorites():
         recipe_img=data['recipeImage'],
         user_id=user.id,
     )
-    
-    print(new_fav)
     
     db.session.add(new_fav)
     db.session.commit()
@@ -221,8 +216,6 @@ def get_random_recipes():
         
         data = response.json()
         recipes = data["recipes"]
-        
-        print(len(recipes))
         
         return jsonify(recipes)
       
