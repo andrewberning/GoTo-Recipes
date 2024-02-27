@@ -6,8 +6,6 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 db = SQLAlchemy(session_options={"expire_on_commit": False})
 
-DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/832px-No-Image-Placeholder.svg.png"
-
 class User(db.Model):
     """User"""
   
@@ -117,8 +115,7 @@ class Favorite(db.Model):
     
     recipe_img = db.Column(
       db.Text(),
-      nullable=False,
-      default=DEFAULT_IMAGE_URL
+      nullable=False
     )
     
     user_id = db.Column(
