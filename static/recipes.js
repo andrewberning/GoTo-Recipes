@@ -1,12 +1,9 @@
-const BASE_URL = "http://127.0.0.1:5000"
-let pageNumber = 1
 let recipesList = $("#recipes-list")
 let favoritesList = $("#favorites-list")
 let singleRecipe = $(".container")
 let viewMoreBtn = $("#view-more-btn")
 
-let recipes = []
-
+let pageNumber = 1
 
 /** clear the list */
 function clearRecipesList() {
@@ -47,7 +44,7 @@ function generateRecipeHTML(recipe) {
 
 /** get recipe function */
 async function getRecipes(query, page) {
-  const response = await axios.get(`${BASE_URL}/recipes/${query}/${page}`)
+  const response = await axios.get("/recipes/${query}/${page}")
   
   for (let recipeData of response.data) {
     let recipe = $(generateRecipeHTML(recipeData));
@@ -58,7 +55,7 @@ async function getRecipes(query, page) {
 
 /** get random recipes */
 async function getRandomRecipes() {
-  const response = await axios.get(`${BASE_URL}/random_recipes`)
+  const response = await axios.get("/random_recipes")
 
   for (let recipeData of response.data) {
     let recipe = $(generateRecipeHTML(recipeData));
