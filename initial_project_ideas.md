@@ -1,7 +1,5 @@
 # Project Ideas
 
-In this file (but not restricted to), you can use to get used to working on this repository and jot down project ideas to easily be shared with your mentors and to keep the history of!
-
 Project Idea #1:
   Create a Recipe Food site using "TheMealDB" API. You will register an account and search for food recipes based upon ingredient(s)/title(s) of recipes. I want to implement a way to save/delete recipe(s) to your account so they can be referenced/deleted at a later time. I would also like to implement a way to comment on the recipe(s) so users can share  what they like/dislike about the recipe(s). 
 
