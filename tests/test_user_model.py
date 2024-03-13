@@ -1,6 +1,6 @@
 """User Model Tests."""
 
-# run test: python3 -m unittest test_user_model.py
+# run test: python3 -m unittest ./tests/test_user_model.py
 
 
 from flask import session

@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, redirect, request, session, jsonify
+from flask import Flask, flash, render_template, redirect, request, session, jsonify, g
 import requests
 from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import Unauthorized
@@ -6,6 +6,7 @@ from werkzeug.exceptions import Unauthorized
 from models import db, connect_db, User, Favorite
 from forms import RegisterForm, LoginForm
 from keys import API_KEY
+from utils import user_not_in_session, not_same_username, check_api
 
 API_BASE_URL = "https://api.spoonacular.com/recipes"
 
@@ -27,6 +28,16 @@ with app.app_context():
 
 ######## ROUTES ########
 
+@app.before_request
+def add_user_to_g():
+    """If we are logged in, add curr user to Flask global."""
+    
+    if "username" in session:
+        g.user = User.query.filter_by(username=session['username']).first()
+        print(g.user)
+    else:
+        g.user = None
+
 @app.route("/")
 def index():
     "Redirect to login page."
@@ -41,19 +52,18 @@ def login():
     - Load login page.
     """
     
-    # if username is in session, redirect to users/'username'
-    if "username" in session:
+    if g.user:
         return redirect(f"/users/{session['username']}")
       
     form = LoginForm()
     
-    # if form submitted, validate data.
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
                                 form.password.data)
         
         if user:
             session['username'] = user.username
+            flash(f"Welcome back {user.username}!", "success")
             return redirect(f"/users/{user.username}")
         else:
             flash("Invalid credentials. Try Again.", "danger")
@@ -68,18 +78,17 @@ def logout():
         - redirect to login page.
     """
     session.pop("username")
+    flash("Successfully logged out.", "success")
     return redirect("/login")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
   
-  # if username is in session, redirect to users/'username'
-  if "username" in session:
+  if g.user:
       return redirect(f"/users/{session['username']}")
     
   form = RegisterForm()
   
-  # if form submitted, validate data.
   if form.validate_on_submit():
     try:
         user = User.signup(
@@ -93,14 +102,11 @@ def register():
         db.session.commit()
         session["username"] = user.username
         
-        
-        
     except IntegrityError:
         flash("Username already exists. Try another.", "danger")
         return render_template("users/register.html", form=form)
-      
+    flash(f"Welcome {user.username}!", "success")  
     return redirect(f"/users/{user.username}")
-      
 
   return render_template('/users/register.html', form=form)
 
@@ -110,20 +116,25 @@ def register():
 def search(username):
     """Show user home page."""
     
-    if "username" not in session or username != session['username']:
-        raise Unauthorized()
-    
-    user = User.query.filter_by(username=username).first()
+    if user_not_in_session():
+        return redirect("/")
       
-    return render_template("users/search.html", user=user)
+    if not_same_username(username):
+        return redirect(f"/users/{session['username']}")
+    
+    return render_template("users/search.html", user=g.user)
 
 @app.route("/users/<username>/favorites")
 def favorites(username):
     """Show user favorite recipes."""
+    # use utils functions for checking user and username
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(username):
+        return redirect(f"/users/{session['username']}")
     
-    user = User.query.filter_by(username=username).first()
-    
-    return render_template("users/favorites.html", user=user)
+    return render_template("users/favorites.html", user=g.user)
     
   
 @app.route("/users/favorites/<int:id>", methods=["DELETE"])
@@ -141,14 +152,11 @@ def deleteFavoriteRecipe(id):
 def add_to_favorites():
     """Add a recipe to your favorites list."""
     
-    username = session.get('username')
-    user = User.query.filter_by(username=username).first()
-    
     data = request.json
     
     existing_favorite = Favorite.query.filter_by(
         recipe_id=data['recipeId'],
-        user_id=user.id
+        user_id=g.user.id
     ).first()
     
     if existing_favorite:
@@ -158,7 +166,7 @@ def add_to_favorites():
         recipe_id=data['recipeId'],
         recipe_title=data['recipeTitle'],
         recipe_img=data['recipeImage'],
-        user_id=user.id,
+        user_id=g.user.id,
     )
     
     db.session.add(new_fav)
@@ -171,9 +179,9 @@ def add_to_favorites():
 def get_recipes(query, page):
     """Get recipes."""
     
-    if API_KEY is None:
-      raise ValueError("API Key is not provided")
-    
+    # if API_KEY is None:
+    #   raise ValueError("API Key is not provided")
+    check_api(API_KEY)
     url = f"{API_BASE_URL}/complexSearch"
     offsetStr = int(page) * 10
 
@@ -200,9 +208,7 @@ def get_recipes(query, page):
 def get_random_recipes():
     """Get random recipes"""
     
-    if API_KEY is None:
-      raise ValueError("API Key is not provided")
-    
+    check_api(API_KEY)  
     url = f"{API_BASE_URL}/random"
     
     queryParameters = {
@@ -226,12 +232,7 @@ def get_random_recipes():
 def get_recipe(recipe_id):
     """Show a recipe."""
     
-    username = session.get('username')
-    user = User.query.filter_by(username=username).first()
-    
-    if API_KEY is None:
-      raise ValueError("API Key is not provided")
-    
+    check_api(API_KEY)
     url = f"{API_BASE_URL}/{recipe_id}/information"
     
     queryParameters = {
@@ -245,8 +246,7 @@ def get_recipe(recipe_id):
         
         recipeData = response.json()
         
-      
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Failed to fetch recipes: {e}")
     
-    return render_template(f"users/recipe.html", user=user, recipe=recipeData)
+    return render_template(f"users/recipe.html", user=g.user, recipe=recipeData)

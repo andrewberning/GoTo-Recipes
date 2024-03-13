@@ -104,8 +104,7 @@ class Favorite(db.Model):
     
     recipe_id = db.Column(
       db.Integer(), 
-      nullable=False, 
-      unique=True
+      nullable=False
     )
     
     recipe_title = db.Column(
@@ -123,8 +122,6 @@ class Favorite(db.Model):
       db.ForeignKey('users.id', ondelete='cascade'),
       nullable=False  
     )
-    
-     
       
 def connect_db(app):
   """Connect to database."""

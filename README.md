@@ -17,8 +17,69 @@ The [Spoonacular API](https://spoonacular.com/food-api) is very easy to use for 
 ## Tech Stack
 The tech stack I used for this website consisted of Python/Flask, Jinja, WTForms, PostgreSQL, SQLAlchemy, Javascript, HTML, CSS.
 
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+
+### Prerequisites
+- Need Python 3.x
+- pip3
+
+### Installation
+1. Clone the GoToRecipes [repo] (https://github.com/andrewberning/GoTo-Recipes.git) 
+2. In terminal, navigate to project directory using "$ cd my-project"
+3. Create your virtual environment with "$ python3 -m venv venv"
+4. In terminal, navigate to your virtual environment (venv) with "$ source venv/bin/activate"
+5. Install dependencies with "pip3 install -r requirements.txt"
+
+### Runing the Application
+Be sure you are in your virtual environment.
+To run this application, use the command "$ flask run" for developer mode.
+If you would like to run in debug mode, use "$ flask run --debug". This is also in developer mode.
+Use ctrl+C to quit the application.
+  
+### Configuring the Database
+Change the database URI to what database type you will be using. 
+I am using PostgreSQL for my application. 
+Locally, create a database and use the name of the database in the URI like so,"app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///recipe'". 
+In this case, the database name is "recipe". Replace "recipe" with your database name.
+
+### Depoloyment
+I am using Render to deploy this application and ElephantSQL for my database. I am using the free tier for both. 
+  #### ElephantSQL
+   - Create an account with ElephantSQL using GitHub.
+   - Select the US-West-1 Region and the Tiny Turtle for free tier.
+   - Confirm and create
+   - Click on new instance and make not of the URL for your database. You will need it for Render.
+
+  #### Render
+  ##### Setting up your app
+   -  You must install gunicorn via pip in your virtual environment.
+   -  Be sure you have your project on your GitHub.
+   -  Create your account on Render with your GitHub.
+   -  Create a new instance of "Web Service".
+   -  Connect to your repository on GitHub.
+   -  Make sure the start command is "gunicorn app:app
+   -  Enter your environmental variables:
+      -  DATABASE_URL: this will be that URL from ElephantSQL. Be sure you change "postgres:" -> "postgresql:" if you are using postgreSQL, like I did.
+      -  SECRET_KEY: anything you want. Long and random is best!
+      -  PYTHON_VERSION: 3:X:X - whichever version you are using
+   - Choose "Create Web Service"
+  
+  #### Debuggin app
+  - In the dashboard, you can view the logs.
+  
+  #### Updating app
+  - When you push your GitHub repo, it will automatically redeploy your site.
+  - You can turn it off in the settings.
+
+### Testing
+To test you must be in your virtual environment.
+Test commands for terminal are provided at the top of the each test file.
+  
+### 
+
 ## Extra Notes
-If the website takes a while to run, be patient for it is on the free tier of Render. <br/> For the Spoonacular service, I am also using the free tier. If there is an error code 402, this means no more calls to the API can be made until the quota resets (Quota resets daily at midnight UTC, check back tomorrow). 
+If the website takes a while to run, be patient. It is on the free tier of Render. <br/> For the Spoonacular service, I am also using the free tier. If there is an error code 402, this means no more calls to the API can be made until the quota resets (Quota resets daily at midnight UTC, check back tomorrow). 
 
 
 ## Summary
