@@ -1,12 +1,10 @@
-from flask import Flask, session, flash, redirect
+from flask import Flask, session, flash, redirect, g
 
 def user_not_in_session():
     """Check if user is logged in."""
-    if "username" not in session:
+    if not g.user:
         flash("You need to log in to access this page.", "danger")
         return True
-        
-        
         
 def not_same_username(username):
     """Check if the provided username matches the logged-in user."""
