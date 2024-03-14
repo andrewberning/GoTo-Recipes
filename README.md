@@ -9,6 +9,7 @@ My first Capstone Project is called "GoTo Recipes". It is a Recipe Food website 
 Users who visit this site would be anyone looking to find recipes by title and save them for future reference.
 
 ## User Flow
+
 The user flows for this website will be: <ol><li>A login page for existing users to login</li><li>A register page for new users to signup</li><li>A home page where users can search for recipes by recipe title:<ul><li>After clicking the search button with a query, the first 10 recipes load</li><li>If the user wants to view more recipes from their search, they can click the view more button at the end of the list to do so</li><li>Users can also click the Random Recipes button to get 10 random recipes from the API</li></ul></li><li>A single recipe page: <ul><li>Show the title, image, and a short description of the recipe</li><li>Also, buttons to go to the full recipe website, return to search, and go to favorites</li></ul></li><li>A favorites page that shows all of the users favorite recipes: <ul><li>User can click to see single recipe page</li><li>Delete recipe from list</li></ul></li><li>Logout</li></ol> 
 
 ## API Notes
@@ -31,7 +32,7 @@ These instructions will get you a copy of the project up and running on your loc
 4. In terminal, navigate to your virtual environment (venv) with "$ source venv/bin/activate"
 5. Install dependencies with "pip3 install -r requirements.txt"
 
-### Runing the Application
+### Running the Application
 Be sure you are in your virtual environment.
 To run this application, use the command "$ flask run" for developer mode.
 If you would like to run in debug mode, use "$ flask run --debug". This is also in developer mode.
@@ -42,6 +43,9 @@ Change the database URI to what database type you will be using.
 I am using PostgreSQL for my application. 
 Locally, create a database and use the name of the database in the URI like so,"app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///recipe'". 
 In this case, the database name is "recipe". Replace "recipe" with your database name.
+
+### Database Schema
+![GoToRecipes_SchemaDesign](https://github.com/andrewberning/GoTo-Recipes/assets/102753394/d4bc4a2d-7755-4b5e-86b8-8c241eea1958)
 
 ### Depoloyment
 I am using Render to deploy this application and ElephantSQL for my database. I am using the free tier for both. 
