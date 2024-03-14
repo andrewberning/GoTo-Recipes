@@ -43,6 +43,9 @@ I am using PostgreSQL for my application.
 Locally, create a database and use the name of the database in the URI like so,"app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///recipe'". 
 In this case, the database name is "recipe". Replace "recipe" with your database name.
 
+### Schema Design
+![GoToRecipes_SchemaDesign](https://github.com/andrewberning/GoTo-Recipes/assets/102753394/d4bc4a2d-7755-4b5e-86b8-8c241eea1958)
+
 ### Depoloyment
 I am using Render to deploy this application and ElephantSQL for my database. I am using the free tier for both. 
   #### ElephantSQL
