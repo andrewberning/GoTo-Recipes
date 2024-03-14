@@ -26,34 +26,29 @@ connect_db(app)
 with app.app_context():
     db.create_all()
 
-######## ROUTES ########
 
 @app.before_request
 def add_user_to_g():
-    """If we are logged in, add curr user to Flask global."""
+    """If we are logged in, add current user to Flask global."""
     
     if "username" in session:
         g.user = User.query.filter_by(username=session['username']).first()
-        print(g.user)
     else:
         g.user = None
+
+######## ROUTES ########
 
 @app.route("/")
 def index():
     "Redirect to login page."
-    
-    return redirect("/login")
+    if g.user:
+        return redirect(f"/users/{session['username']}")
+    else:
+        return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Show login page:
-    
-    - if "username" in session: redirect to user homepage.
-    - Load login page.
-    """
-    
-    if g.user:
-        return redirect(f"/users/{session['username']}")
+    """Show login page"""
       
     form = LoginForm()
     
@@ -83,9 +78,6 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-  
-  if g.user:
-      return redirect(f"/users/{session['username']}")
     
   form = RegisterForm()
   
@@ -105,6 +97,7 @@ def register():
     except IntegrityError:
         flash("Username already exists. Try another.", "danger")
         return render_template("users/register.html", form=form)
+      
     flash(f"Welcome {user.username}!", "success")  
     return redirect(f"/users/{user.username}")
 
@@ -127,7 +120,7 @@ def search(username):
 @app.route("/users/<username>/favorites")
 def favorites(username):
     """Show user favorite recipes."""
-    # use utils functions for checking user and username
+
     if user_not_in_session():
         return redirect("/")
       
@@ -140,6 +133,12 @@ def favorites(username):
 @app.route("/users/favorites/<int:id>", methods=["DELETE"])
 def deleteFavoriteRecipe(id):
     """Delete recipe from database."""
+    
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(g.user.username):
+        return redirect(f"/users/{session['username']}")
   
     favRecipe = Favorite.query.get_or_404(id)
     
@@ -151,6 +150,12 @@ def deleteFavoriteRecipe(id):
 @app.route("/users/favorites/add", methods=["POST"])
 def add_to_favorites():
     """Add a recipe to your favorites list."""
+    
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(g.user.username):
+        return redirect(f"/users/{session['username']}")
     
     data = request.json
     
@@ -179,8 +184,12 @@ def add_to_favorites():
 def get_recipes(query, page):
     """Get recipes."""
     
-    # if API_KEY is None:
-    #   raise ValueError("API Key is not provided")
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(g.user.username):
+        return redirect(f"/users/{session['username']}")
+    
     check_api(API_KEY)
     url = f"{API_BASE_URL}/complexSearch"
     offsetStr = int(page) * 10
@@ -208,6 +217,12 @@ def get_recipes(query, page):
 def get_random_recipes():
     """Get random recipes"""
     
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(g.user.username):
+        return redirect(f"/users/{session['username']}")
+    
     check_api(API_KEY)  
     url = f"{API_BASE_URL}/random"
     
@@ -231,6 +246,12 @@ def get_random_recipes():
 @app.route("/getRecipe/<int:recipe_id>")
 def get_recipe(recipe_id):
     """Show a recipe."""
+    
+    if user_not_in_session():
+        return redirect("/")
+      
+    if not_same_username(g.user.username):
+        return redirect(f"/users/{session['username']}")
     
     check_api(API_KEY)
     url = f"{API_BASE_URL}/{recipe_id}/information"
